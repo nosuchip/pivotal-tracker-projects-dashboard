@@ -98,12 +98,10 @@ class EpicsApiView(BaseApiView):
            - current progress
         """
 
-        # TODO: Call Pivotal Tracker API for project info
-        # resp = requests.get()
-
         epic = {}
 
-        resp = requests.get(settings.PIVOTAL_TRACKER_EPIC_ENDPOINT, headers=self.HEADERS)
+        url = settings.PIVOTAL_TRACKER_EPIC_ENDPOINT.format(project_id=project_id, epic_id=epic_id)
+        resp = requests.get(url, headers=self.HEADERS)
         if resp.status_code == 200:
             jsn = resp.json()
             epic.update({
@@ -124,4 +122,4 @@ class EpicsApiView(BaseApiView):
 
             return self.response_ok(data=epic)
 
-        return self.response_fail(message='Project not found')
+        return self.response_fail(message='Epic not found')

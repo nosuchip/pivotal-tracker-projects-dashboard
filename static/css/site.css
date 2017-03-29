@@ -88,10 +88,41 @@
 }
 
 /* SITE css */
+html,
 body {
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
-    font-weight: normal;
-    font-size: 14px;
-    color: #666;
+  height: 100%;
+  widows: 100%;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  color: #666;
 }
 
+.page-container {
+  height: 100%;
+  padding: 20px;
+}
+
+.page-container > div.loader {
+  position: relative;
+  top: 45%;
+}
+
+.project-container .project-name {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.epic-container {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+}
+
+.epic-container:last-child {
+  border-bottom: none;
+}
+
+.epic-container .epic-name {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
