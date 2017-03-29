@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Pivotal Tracker Projects</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+
+  {%- block head_css -%}
+  <link rel="stylesheet" href="{{ url_for_static('lib/skeleton/css/normalize.css') }}">
+  <link rel="stylesheet" href="{{ url_for_static('lib/skeleton/css/skeleton.css') }}">
+  <link rel="stylesheet" href="{{ url_for_static('css/site.css') }}">
+
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  {%- endblock head_css -%}
+</head>
+
+<body>
+  {%- block page_body -%}
+  <div class="page-container container">
+  </div>
+  {%- endblock page_body -%}
+
+  <div style="display: none">
+    {%-  include 'templates.html' -%}
+  </div>
+
+  {%- block tail_js -%}
+  <script type="text/javascript" src="{{ url_for_static('lib/jquery/js/jquery.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for_static('lib/chartjs/js/chart.bundle.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for_static('lib/handlebars/js/handlebars.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for_static('js/templates.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for_static('js/site.js') }}"></script>
+  <script type="text/javascript">
+    new Pivotal.HomeModel({
+      projectsUrl: "{{ url_for('api.projects') }}",
+      epicsUrl: "{{ url_for('api.epics', project_id='PROJECT_ID', epic_id='EPIC_ID') }}",
+    })
+  </script>
+  {%- endblock tail_js -%}
+</body>
+
+</html>
