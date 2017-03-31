@@ -143,14 +143,16 @@ body {
   height: 15px;
   border: none;
   background-color: #80F31F;
+  opacity: 0.5;
 }
 
 .stacked-bar-graph > span.stacked-bar-span-total {
   background-color: green;
+  opacity: 1;
 }
 
 .stacked-bar-graph > span.stacked-bar-span-unstarted {
-  background-color: #01BECA;
+  background-color: yellowgreen;
 }
 
 .stacked-bar-graph > span.stacked-bar-span-rejected {
@@ -158,17 +160,20 @@ body {
 }
 
 .stacked-bar-graph > span.stacked-bar-span-started {
-  background-color: #3BFD5B;
+  background-color: lightgreen;
 }
 
 .stacked-bar-graph > span.stacked-bar-span-finished {
   background-color: #6917ED;
+  opacity: 1;
 }
 
 .stacked-bar-graph > span.stacked-bar-span-delivered {
   background-color: white;
+  opacity: 1;
 }
 
 .stacked-bar-graph > span.stacked-bar-span-accepted {
-  background-color: white;
+  background-color: #3BFD5B;
+  opacity: 1;
 }

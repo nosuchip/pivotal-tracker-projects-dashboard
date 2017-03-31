@@ -39,8 +39,8 @@
 
   <div class="stacked-bar-graph" style="width:100%">
     {{#each progress_by_states}}
-    	<span style="width: {{ this.normalized }}%" class="stacked-bar-span-{{@key}}"
-        title="{{this.value}} story points in '{{@key}}' stories, overall progress is {{ ../progress.value}}"></span>
+    	<span style="width: {{ normalized }}%" class="stacked-bar-span-{{name}}"
+        title="{{value}} story points in '{{name}}' stories, overall progress is {{ ../progress.value}}"></span>
     {{/each}}
   </div>
 </script>
