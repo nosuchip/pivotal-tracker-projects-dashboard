@@ -76,8 +76,8 @@ class ProjectsApiView(BaseApiView):
 
 
 class EpicsApiView(BaseApiView):
-    EPIC_STORIES_TODO = ['unstarted', 'started', 'finished', 'delivered', 'rejected']
-    EPIC_STORIES = ['unstarted', 'started', 'finished', 'delivered', 'accepted', 'rejected']
+    EPIC_STORIES_DONE = ['unstarted', 'started', 'finished', 'delivered', 'rejected']
+    EPIC_STORIES = ['unstarted', 'started', 'finished', 'delivered', 'rejected', 'accepted']
 
     def get(self, project_id):
         project_data = []
@@ -99,9 +99,9 @@ class EpicsApiView(BaseApiView):
             if epic_stories:
                 # TBD: Some stories hasn't 'estimate' field and dropped out of calculation!
 
-                stories_todo = [story for story in epic_stories if story.get('current_state') in self.EPIC_STORIES_TODO]
+                stories_done = [story for story in epic_stories if story.get('current_state') in self.EPIC_STORIES_DONE]
 
-                if stories_todo:
+                if stories_done:
                     epic_data = {
                         'name': epic['name'],
                         'total_story_points': sum(story.get('estimate', 0) for story in epic_stories),
@@ -111,7 +111,7 @@ class EpicsApiView(BaseApiView):
                         return round(float(value) * max_value / float(to), 4)
 
                     epic_data['progress'] = {
-                        'value': sum(story.get('estimate', 0) for story in stories_todo),
+                        'value': sum(story.get('estimate', 0) for story in stories_done),
                         'normalized': None
                     }
 
@@ -121,8 +121,7 @@ class EpicsApiView(BaseApiView):
                     for story in epic_stories:
                         state, estimate = story['current_state'], story.get('estimate', 0)
 
-                        # if state in self.EPIC_STORIES_TODO:
-                        if 1:
+                        if state in self.EPIC_STORIES_DONE:
                             if state not in progress_by_states:
                                 progress_by_states[state] = estimate
                             else:
@@ -131,7 +130,7 @@ class EpicsApiView(BaseApiView):
                     epic_data['progress_by_states'] = sorted([
                         {'name': k, 'value': v, 'normalized': norm(v)}
                         for k, v in progress_by_states.items()],
-                        key=lambda x: x['name'])
+                        key=lambda x: x['name'], reverse=True)
 
                     stories_in_epic = [story['id'] for story in epic_stories]
 
