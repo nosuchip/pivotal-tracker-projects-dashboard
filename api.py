@@ -108,7 +108,7 @@ class EpicsApiView(BaseApiView):
                     }
 
                     def norm(value, max_value=100, to=epic_data['total_story_points']):
-                        return round(value * max_value / to, 2)
+                        return round(float(value) * max_value / float(to), 4)
 
                     epic_data['progress'] = {
                         'value': sum(story.get('estimate', 0) for story in stories_todo),
