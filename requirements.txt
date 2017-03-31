@@ -1,5 +1,6 @@
 appdirs==1.4.3
 click==6.7
+dateutils==0.6.6
 Flask==0.12
 itsdangerous==0.24
 Jinja2==2.9.5

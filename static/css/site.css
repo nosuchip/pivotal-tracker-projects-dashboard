@@ -91,7 +91,7 @@
 html,
 body {
   height: 100%;
-  widows: 100%;
+  width: 100%;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
   font-weight: normal;
   font-size: 14px;
@@ -122,7 +122,53 @@ body {
   border-bottom: none;
 }
 
-.epic-container .epic-name {
+.epic-container .epic-header .epic-name {
   font-weight: bold;
+  text-transform: capitalize;
+}
+
+.epic-container .epic-header {
   margin-bottom: 10px;
+}
+
+.stacked-bar-graph {
+  width: 100%;
+  height: 15px;
+  margin-bottom: 5px;
+  font-size: 0;
+}
+
+.stacked-bar-graph > span {
+  display: inline-block;
+  height: 15px;
+  border: none;
+  background-color: #80F31F;
+}
+
+.stacked-bar-graph > span.stacked-bar-span-total {
+  background-color: green;
+}
+
+.stacked-bar-graph > span.stacked-bar-span-unstarted {
+  background-color: #01BECA;
+}
+
+.stacked-bar-graph > span.stacked-bar-span-rejected {
+  background-color: #FA2E48;
+}
+
+.stacked-bar-graph > span.stacked-bar-span-started {
+  background-color: #3BFD5B;
+}
+
+.stacked-bar-graph > span.stacked-bar-span-finished {
+  background-color: #6917ED;
+}
+
+.stacked-bar-graph > span.stacked-bar-span-delivered {
+  background-color: white;
+}
+
+.stacked-bar-graph > span.stacked-bar-span-accepted {
+  background-color: white;
 }

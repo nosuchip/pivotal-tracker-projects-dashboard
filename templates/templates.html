@@ -19,25 +19,31 @@
 <script type="text/x-handlebars-template" id="project-container">
   <div class="panel project-container" data-project-id="{{ project_id }}">
     <div class="panel-heading"><div class="project-name">{{ name }}</div></div>
-    <div class="panel-body">
-      {{#each epics}}
-        <div class="epic-container" data-epic-id="{{ epic_id }}">
-          <div class="epic-name">{{ name }}</div>
-          <div class="epic-info">
-            {{renderTemplate 'loader' '{"text": "Loading epic information..", "cls": "spinner-sm"}'}}
-          </div>
-        </div>
-      {{/each}}
+    <div class="panel-body project-epics">
+      {{renderTemplate 'loader' '{"text": "Loading epics information..", "cls": "spinner-sm"}'}}
     </div>
   </div>
 </script>
 
 <script type="text/x-handlebars-template" id="epic-info">
-  <div class="epic-name">{{ name }} :: Forecasted Delivery {{ delivery_date }}</div>
-  <div class="epic-info" data-epic-story-points="{{ story_points }}" data-epic-progress="{{ progress }}">
-    <canvas class="epic-canvas" id="epic-canvas-{{ project_id}}-{{ epic_id }}"
-      style="width: 100%; height: 50px"></canvas>
+  <div class="epic-container" data-epic-id="{{ epic_id }}">
+    <div class="epic-header"><span class="epic-name">{{ name }}</span> :: Forecasted Delivery {{ delivery_date }}</div>
+    {{ renderTemplate 'horizontal-stacked-bar' this }}
   </div>
 </script>
+
+<script type="text/x-handlebars-template" id="horizontal-stacked-bar">
+  <div class="stacked-bar-graph" style="width:100%">
+		<span style="width: 100%" class="stacked-bar-span-total" title="{{total_story_points}} story points in epic"></span>
+  </div>
+
+  <div class="stacked-bar-graph" style="width:100%">
+    {{#each progress_by_states}}
+    	<span style="width: {{ this.normalized }}%" class="stacked-bar-span-{{@key}}"
+        title="{{this.value}} story points in '{{@key}}' stories, overall progress is {{ ../progress.value}}"></span>
+    {{/each}}
+  </div>
+</script>
+
 
 {%- endraw -%}

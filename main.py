@@ -32,7 +32,7 @@ def configure_routes(app):
 
     from api import EpicsApiView
     epics_api = EpicsApiView.as_view('api.epics')
-    app.add_url_rule('/api/epics/<project_id>/<epic_id>', view_func=epics_api, methods=['GET'])
+    app.add_url_rule('/api/projects/<project_id>/epics/', view_func=epics_api, methods=['GET'])
 
 
 flask_app = init(__name__)

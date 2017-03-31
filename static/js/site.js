@@ -12,48 +12,8 @@ Pivotal.HomeModel = function(_config) {
     var self = this;
 
     var defaultConfig = {
-        apiKey: '',
-        transactionsUrl: '',
-        chartConfig: {
-            type: 'horizontalBar',
-            data: {
-                labels: ["", ""],
-                datasets: [{
-                    label: "",
-                    data: [100, 75],        //config.chartConfig.data.datasets[0].data
-                    backgroundColor: ["#669911", "#119966"],
-                }]
-            },
-            options: {
-                legend: {display: false},
-                tooltips: {mode: false},
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    xAxes: [{
-                        position: "top",
-                        ticks: {
-                            min: 0,         //config.chartConfig.options.scales.xAxes[0].ticks.min
-                            max: 100,       ////config.chartConfig.options.scales.xAxes[0].ticks.max
-                            stepSize: 25    //config.chartConfig.options.scales.xAxes[0].ticks.stepSize
-                        },
-                        barThickness: 4,
-                        gridLines: {
-                            display: false,
-                            color: "rgb(255, 255, 255)",
-                        }
-                    }],
-                    yAxes: [{
-                        barThickness: 4,
-                        gridLines: {
-                            display: false,
-                            color: "rgb(255, 255, 255)",
-                        }
-                    }]
-                }
-
-            }
-        }
+        projectUrl: '',
+        epicsUrl: ''
     };
 
     var config = $.extend({}, defaultConfig, _config);
@@ -86,37 +46,30 @@ Pivotal.HomeModel = function(_config) {
         });
     }
 
-    self.refreshEpic = function(epic) {
-        var $epicControl = $('[data-epic-id="' + epic.epic_id + '"]');
+    self.refreshEpics = function(project_id) {
+        var $projectControl = $('[data-project-id="' + project_id + '"]');
 
-    getData(epic.url, function(response) {
-            console.log('Loading epic ' + epic.epic_id);
-            $epicControl.html(Pivotal.Templates.renderTemplate('epic-info', response.data));
-
-            var chartCanvas = $epicControl.find('canvas')[0];
-            var chartContext = $epicControl.find('canvas')[0].getContext("2d");
-
-            config.chartConfig.data.datasets[0].data = [response.data.story_points, response.data.progress];
-            var chart = new Chart(chartContext, config.chartConfig);
-            $epicControl.data('chart', chart);
-
+        var url = config.epicsUrl.replace('PROJECT_ID', project_id);
+        getData(url, function(response) {
+            $('.project-epics', $projectControl).html('');
+            response.data.forEach(function(epic) {
+                $('.project-epics', $projectControl).append(Pivotal.Templates.renderTemplate('epic-info', epic));
+            })
         }, function() {
-            //TODO: Render "refresh epic" control
-            console.log('Epic ' + epic.epic_id + ' loaded!');
-        }, $epicControl)
+        }, $projectControl)
     };
 
     self.refreshProjects = function() {
         $('.page-container').html(Pivotal.Templates.renderTemplate('loader', {text: 'Loading projects...'}));
 
         getData(config.projectsUrl, function(response) {
-            var projects = response.data.projects;
+            var projects = response.data;
 
             if (projects) {
                 $('.page-container').html('');
                 projects.forEach(function(project) {
                     $('.page-container').append(Pivotal.Templates.renderTemplate('project-container', project));
-                    project.epics.forEach(self.refreshEpic);
+                    self.refreshEpics(project.project_id);
                 });
             }
         }, function() {

@@ -3,11 +3,7 @@
 import json
 import requests
 
-# REMOVE: Next 2 lines is for mock data only
-from datetime import datetime, timedelta
-import random
-
-from flask import Response, url_for
+from flask import Response
 from flask.views import MethodView
 
 import settings
@@ -15,6 +11,31 @@ import settings
 
 class BaseApiView(MethodView):
     HEADERS = {settings.PIVOTAL_TRACKER_API_KEY_HEADER: settings.PIVOTAL_TRACKER_API_KEY}
+
+    def make_json_request(self, url, method='GET', headers=None, query_string_data=None, request_data=None):
+        """Perform request and return resulting JSON object or `None` if error occurs
+        """
+        params = {
+            'headers': headers or {},
+            'data': request_data or {},
+            'params': query_string_data or {}
+        }
+
+        methods = {
+            'GET': requests.get,
+            'POST': requests.post
+        }
+
+        meth = methods[method]
+
+        resp = meth(url, **params)
+        if resp.status_code == 200:
+            try:
+                return resp.json()
+            except:
+                pass
+
+        return None
 
     def response_json(self, success=True, message='', data=None, code=200):
         json_data = json.dumps(
@@ -40,86 +61,101 @@ class BaseApiView(MethodView):
 
 
 class ProjectsApiView(BaseApiView):
-    def _get_epics(self, project_id):
-        epics = []
-        url = settings.PIVOTAL_TRACKER_EPICS_ENDPOINT.format(project_id=project_id)
-
-        resp = requests.get(url, headers=self.HEADERS)
-
-        if resp.status_code == 200:
-            try:
-                jsn = resp.json()
-
-                for epic_json in jsn:
-                    epics.append({
-                        'epic_id': epic_json['id'],
-                        'name': epic_json['name'],
-                        'project_id': epic_json['project_id'],
-                        'pivotal_url': epic_json['url'],
-                        'url': url_for('api.epics', project_id=project_id, epic_id=epic_json['id'])
-                    })
-            except:
-                print('Unable to decode epics json while response code is 200')
-
-        return epics
-
     def get(self):
         """Returns list of project with basic non-calculable information,
             In other words everything that could be received with single request to Pivotal Tracker API
         """
-
-        # TODO: Call Pivotal Tracker API for project info
-        resp = requests.get(settings.PIVOTAL_TRACKER_PROJECTS_ENPOINT, headers=self.HEADERS)
-
-        if resp.status_code == 200:
-            jsn = resp.json()
-
-            projects = []
-
-            for project_json in jsn:
-                project = {
-                    'project_id': project_json['id'],
-                    'name': project_json['name'],
-                    'epics': self._get_epics(project_json['id'])
-                }
-
-                projects.append(project)
-
-            return self.response_ok(data={'projects': projects})
-
-        return self.response_fail(message='No projects found')
+        projects_data = []
+        projects = self.make_json_request(settings.PIVOTAL_TRACKER_PROJECTS_ENPOINT, headers=self.HEADERS)
+        for project in projects:
+            projects_data.append({
+                'project_id': project['id'],
+                'name': project['name']
+            })
+        return self.response_ok(data=projects_data)
 
 
 class EpicsApiView(BaseApiView):
-    def get(self, project_id, epic_id):
-        """Returns comprehensive information about single epic
-           - delivery date
-           - total points
-           - current progress
-        """
+    EPIC_STORIES_TODO = ['unstarted', 'started', 'finished', 'delivered', 'rejected']
+    EPIC_STORIES = ['unstarted', 'started', 'finished', 'delivered', 'accepted', 'rejected']
 
-        epic = {}
+    def get(self, project_id):
+        project_data = []
 
-        url = settings.PIVOTAL_TRACKER_EPIC_ENDPOINT.format(project_id=project_id, epic_id=epic_id)
-        resp = requests.get(url, headers=self.HEADERS)
-        if resp.status_code == 200:
-            jsn = resp.json()
-            epic.update({
-                'name': jsn['name'],
-                'project_id': jsn['project_id'],
-                'epic_id': jsn['id']
-            })
+        url = settings.PIVOTAL_TRACKER_EPICS_ENDPOINT.format(project_id=project_id)
+        project_epics = sorted(self.make_json_request(url, headers=self.HEADERS), key=lambda x: x['name'])
 
-            mock_delivery_date = datetime.utcnow() + timedelta(days=15)
-            mock_story_points = random.randrange(20, 40)
-            mock_progress = random.randrange(mock_story_points//2, mock_story_points)
+        print('>> Found {} epics for project {}'.format(len(project_epics), project_id))
 
-            epic.update({
-                'delivery_date': mock_delivery_date.strftime('%Y-%m-%d'),
-                'story_points': mock_story_points,
-                'progress': mock_progress
-            })
+        for epic in project_epics:
+            url = settings.PIVOTAL_TRACKER_STORIES_ENDPOINT.format(project_id=project_id)
+            filters = 'label:"{}" current_state:{}'.format(epic['name'], ','.join(self.EPIC_STORIES))
+            epic_stories = self.make_json_request(url, query_string_data={'filter': filters}, headers=self.HEADERS)
 
-            return self.response_ok(data=epic)
+            print('>> Found {} stories for epic {}, project {}'.format(
+                len(epic_stories), epic['name'], project_id)
+            )
 
-        return self.response_fail(message='Epic not found')
+            if epic_stories:
+                # TBD: Some stories hasn't 'estimate' field and dropped out of calculation!
+
+                stories_todo = [story for story in epic_stories if story.get('current_state') in self.EPIC_STORIES_TODO]
+
+                if stories_todo:
+                    epic_data = {
+                        'name': epic['name'],
+                        'total_story_points': sum(story.get('estimate', 0) for story in epic_stories),
+                    }
+
+                    def norm(value, max_value=100, to=epic_data['total_story_points']):
+                        return round(value * max_value / to, 2)
+
+                    epic_data['progress'] = {
+                        'value': sum(story.get('estimate', 0) for story in stories_todo),
+                        'normalized': None
+                    }
+
+                    epic_data['progress']['normalized'] = norm(epic_data['progress']['value'])
+
+                    progress_by_states = {}
+                    for story in epic_stories:
+                        state, estimate = story['current_state'], story.get('estimate', 0)
+
+                        # if state in self.EPIC_STORIES_TODO:
+                        if 1:
+                            if state not in progress_by_states:
+                                progress_by_states[state] = estimate
+                            else:
+                                progress_by_states[state] += estimate
+
+                    epic_data['progress_by_states'] = {
+                        k: {'value': v, 'normalized': norm(v)}
+                        for k, v in progress_by_states.items()
+                    }
+
+                    stories_in_epic = [story['id'] for story in epic_stories]
+
+                    #
+                    # Get forecasted delivery date
+                    #
+
+                    url = settings.PIVOTAL_TRACKER_ITERATIONS_ENDPOINT.format(project_id=project_id)
+                    iterations = self.make_json_request(url, headers=self.HEADERS)
+
+                    iterations = sorted(iterations, key=lambda x: x['finish'], reverse=True)
+
+                    for iteration in iterations:
+                        iteration_stories = [story.get('id') for story in iteration['stories'] if story.get('id')]
+                        has_any_epic_story_in_iteration = bool(
+                            [story_id for story_id in stories_in_epic if story_id in iteration_stories]
+                        )
+
+                        if has_any_epic_story_in_iteration:
+                            epic_data['delivery_date'] = iteration['finish']
+                            break
+
+                    print('Epic data for epic {}, project {}: {}'.format(epic['name'], project_id, epic_data))
+
+                    project_data.append(epic_data)
+
+        return self.response_ok(data=project_data)
