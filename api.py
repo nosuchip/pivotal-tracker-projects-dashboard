@@ -7,6 +7,7 @@ from flask import Response, request
 from flask.views import MethodView
 
 import settings
+from dateutil.parser import parse
 
 
 class BaseApiView(MethodView):
@@ -152,7 +153,10 @@ class EpicsApiView(BaseApiView):
                         )
 
                         if has_any_epic_story_in_iteration:
-                            epic_data['delivery_date'] = iteration['finish']
+                            try:
+                                epic_data['delivery_date'] = parse(iteration['finish']).strftime('%d %b %Y')
+                            except:
+                                epic_data['delivery_date'] = None
                             break
 
                     print('Epic data for epic {}, project {}: {}'.format(epic['name'], project_id, epic_data))
