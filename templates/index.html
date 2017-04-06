@@ -36,7 +36,7 @@
   <script type="text/javascript">
     new Pivotal.HomeModel({
       projectsUrl: "{{ url_for('api.projects') }}",
-      epicsUrl: "{{ url_for('api.epics', project_id='PROJECT_ID', epic_id='EPIC_ID') }}",
+      epicsUrl: "{{ url_for('api.epics', project_id='PROJECT_ID') }}",
     })
   </script>
   {%- endblock tail_js -%}

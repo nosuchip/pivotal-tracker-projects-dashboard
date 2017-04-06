@@ -18,7 +18,11 @@
 
 <script type="text/x-handlebars-template" id="project-container">
   <div class="panel project-container" data-project-id="{{ project_id }}">
-    <div class="panel-heading"><div class="project-name">{{ name }}</div></div>
+    <div class="panel-heading">
+      <div class="project-name">{{ name }}</div>
+      <div class="show-finished">
+        <label><input type="checkbox" name="show_finished" value="yes"/> Show finished</label>
+    </div>
     <div class="panel-body project-epics">
       {{renderTemplate 'loader' '{"text": "Loading epics information..", "cls": "spinner-sm"}'}}
     </div>

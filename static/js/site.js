@@ -46,10 +46,13 @@ Pivotal.HomeModel = function(_config) {
         });
     }
 
-    self.refreshEpics = function(project_id) {
+    self.refreshEpics = function(project_id, showFinished) {
         var $projectControl = $('[data-project-id="' + project_id + '"]');
 
         var url = config.epicsUrl.replace('PROJECT_ID', project_id);
+        if (showFinished) {
+            url += '?show_finished';
+        }
         getData(url, function(response) {
             $('.project-epics', $projectControl).html('');
             response.data.forEach(function(epic) {
@@ -77,7 +80,22 @@ Pivotal.HomeModel = function(_config) {
         }, $('.page-container'));
     };
 
+    self.refreshProject = function(e) {
+        var $projectControl = $(e.currentTarget).parents('[data-project-id]'),
+            projectId = $projectControl.attr('data-project-id');
+
+        if (projectId) {
+            $projectControl.find('.project-epics').html(
+                Pivotal.Templates.renderTemplate('loader', {"text": "Loading epics information..", "cls": "spinner-sm"})
+            );
+
+            self.refreshEpics(projectId, $(e.currentTarget).is(':checked'));
+        }
+    }
+
     self.init = function() {
+        $('body').on('click', '[name="show_finished"]', self.refreshProject);
+
         self.refreshProjects();
     };
 
