@@ -22,6 +22,7 @@
       <div class="project-name">{{ name }}</div>
       <div class="show-finished">
         <label><input type="checkbox" name="show_finished" value="yes"/> Show finished</label>
+      </div>
     </div>
     <div class="panel-body project-epics">
       {{renderTemplate 'loader' '{"text": "Loading epics information..", "cls": "spinner-sm"}'}}
@@ -38,12 +39,12 @@
 
 <script type="text/x-handlebars-template" id="horizontal-stacked-bar">
   <div class="stacked-bar-graph" style="width:100%">
-		<span style="width: 100%" class="stacked-bar-span-total" title="{{total_story_points}} story points in epic"></span>
+		<span style="width: 100%" class="stacked-bar-span stacked-bar-span-total" title="{{total_story_points}} story points in epic"></span>
   </div>
 
   <div class="stacked-bar-graph" style="width:100%">
     {{#each progress_by_states}}
-    	<span style="width: {{ normalized }}%" class="stacked-bar-span-{{name}}"
+    	<span style="width: {{ normalized }}%" class="stacked-bar-span stacked-bar-span-{{name}}"
         title="{{value}} story points in '{{name}}' stories, overall progress is {{ ../progress.value}}"></span>
     {{/each}}
   </div>

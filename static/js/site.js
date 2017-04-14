@@ -63,21 +63,21 @@ Pivotal.HomeModel = function(_config) {
     };
 
     self.refreshProjects = function() {
-        $('.page-container').html(Pivotal.Templates.renderTemplate('loader', {text: 'Loading projects...'}));
+        $('.projects-container').html(Pivotal.Templates.renderTemplate('loader', {text: 'Loading projects...'}));
 
         getData(config.projectsUrl, function(response) {
             var projects = response.data;
 
             if (projects) {
-                $('.page-container').html('');
+                $('.projects-container').html('');
                 projects.forEach(function(project) {
-                    $('.page-container').append(Pivotal.Templates.renderTemplate('project-container', project));
+                    $('.projects-container').append(Pivotal.Templates.renderTemplate('project-container', project));
                     self.refreshEpics(project.project_id);
                 });
             }
         }, function() {
             //TODO: Render "refresh projects" control
-        }, $('.page-container'));
+        }, $('.projects-container'));
     };
 
     self.refreshProject = function(e) {
