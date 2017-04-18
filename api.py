@@ -40,7 +40,7 @@ class BaseApiView(MethodView):
 
     def response_json(self, success=True, message='', data=None, code=200):
         json_data = json.dumps(
-            {'success': success, 'message': message, 'data': data or {}},
+            {'success': success, 'message': message, 'data': {} if data is None else data},
         )
 
         response = Response(

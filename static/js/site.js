@@ -70,10 +70,14 @@ Pivotal.HomeModel = function(_config) {
 
             if (projects) {
                 $('.projects-container').html('');
-                projects.forEach(function(project) {
-                    $('.projects-container').append(Pivotal.Templates.renderTemplate('project-container', project));
-                    self.refreshEpics(project.project_id);
-                });
+                if (projects && projects.length) {
+                    projects.forEach(function(project) {
+                        $('.projects-container').append(Pivotal.Templates.renderTemplate('project-container', project));
+                        self.refreshEpics(project.project_id);
+                    });
+                } else {
+                    $('.projects-container').html(Pivotal.Templates.renderTemplate('error', 'No projects found.'))
+                }
             }
         }, function() {
             //TODO: Render "refresh projects" control
