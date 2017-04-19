@@ -222,3 +222,27 @@ span.stacked-bar-span-accepted {
   display: inline-block;
   font-size: 12px;
 }
+
+@media (min-width: 550px) {
+  .epic-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 750px) {
+  .epic-container {
+    width: 46%;
+    display: inline-block;
+    margin-right: 20px
+  }
+
+  .epic-container:last-child {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 1000px) {
+  .epic-container {
+    width: 300px;
+  }
+}
