@@ -33,7 +33,7 @@
 <script type="text/x-handlebars-template" id="epic-info">
   <div class="epic-container" data-epic-id="{{ epic_id }}">
     <div class="epic-header"><span class="epic-name">{{ name }}</span> :: Forecasted Delivery {{ delivery_date }}</div>
-    {{ renderTemplate 'horizontal-stacked-bar' this }}
+    {{ renderTemplate 'doughnut' this }}
   </div>
 </script>
 
@@ -50,5 +50,8 @@
   </div>
 </script>
 
+<script type="text/x-handlebars-template" id="doughnut">
+  <canvas style="width: 300px; height: 300px" class="chart-canvas"></canvas>
+</script>
 
 {%- endraw -%}

@@ -104,35 +104,47 @@ class EpicsApiView(BaseApiView):
         data = {
             1: [{
                 'name': 'Start with coffee',
-                'total_story_points': 10,
+                'total_story_points': 20,
                 'progress': {
-                    'value': 5,
-                    'normalized': .5
+                    'value': 10,
+                    'normalized': 50
                 },
                 'progress_by_states': [{
                     'name': 'unstarted',
                     'value': 2,
-                    'normalized': .2,
+                    'normalized': 10,
                 }, {
                     'name': 'started',
-                    'value': 3,
-                    'normalized': .3,
+                    'value': 4,
+                    'normalized': 20,
+                }, {
+                    'name': 'accepted',
+                    'value': 2,
+                    'normalized': 10,
+                }, {
+                    'name': 'delivered',
+                    'value': 2,
+                    'normalized': 10,
                 }]
             }, {
                 'name': 'Make omlette',
                 'total_story_points': 10,
                 'progress': {
                     'value': 5,
-                    'normalized': .5
+                    'normalized': 100
                 },
                 'progress_by_states': [{
                     'name': 'unstarted',
-                    'value': 2,
-                    'normalized': .2,
+                    'value': 1,
+                    'normalized': 20,
                 }, {
                     'name': 'started',
                     'value': 3,
-                    'normalized': .3,
+                    'normalized': 60,
+                }, {
+                    'name': 'finished',
+                    'value': 1,
+                    'normalized': 20
                 }]
             }],
             2: [
@@ -152,7 +164,7 @@ class EpicsApiView(BaseApiView):
             project_data = self._get_mock(project_id)
         else:
             url = settings.PIVOTAL_TRACKER_EPICS_ENDPOINT.format(project_id=project_id)
-            project_epics = sorted(self.make_json_request(url, headers=self.HEADERS), key=lambda x: x['name'])
+            project_epics = sorted(self.make_json_request(url, headers=self.HEADERS) or [], key=lambda x: x['name'])
 
             print('>> Found {} epics for project {}'.format(len(project_epics), project_id))
 
@@ -200,30 +212,6 @@ class EpicsApiView(BaseApiView):
                             {'name': k, 'value': v, 'normalized': norm(v)}
                             for k, v in progress_by_states.items()
                         ], key=lambda x: self.RESULT_STORIES_ORDER.index(x['name']))
-
-                        stories_in_epic = [story['id'] for story in epic_stories]
-
-                        #
-                        # Get forecasted delivery date
-                        #
-
-                        url = settings.PIVOTAL_TRACKER_ITERATIONS_ENDPOINT.format(project_id=project_id)
-                        iterations = self.make_json_request(url, headers=self.HEADERS)
-
-                        iterations = sorted(iterations, key=lambda x: x['finish'], reverse=True)
-
-                        for iteration in iterations:
-                            iteration_stories = [story.get('id') for story in iteration['stories'] if story.get('id')]
-                            has_any_epic_story_in_iteration = bool(
-                                [story_id for story_id in stories_in_epic if story_id in iteration_stories]
-                            )
-
-                            if has_any_epic_story_in_iteration:
-                                try:
-                                    epic_data['delivery_date'] = parse(iteration['finish']).strftime('%d %b %Y')
-                                except:
-                                    epic_data['delivery_date'] = None
-                                break
 
                         print('Epic data for epic {}, project {}: {}'.format(epic['name'], project_id, epic_data))
 

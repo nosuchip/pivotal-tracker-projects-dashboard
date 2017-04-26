@@ -18,6 +18,15 @@ Pivotal.HomeModel = function(_config) {
 
     var config = $.extend({}, defaultConfig, _config);
 
+    var colorMapping = {
+      unstarted: 'yellowgreen',
+      rejected: '#FA2E48',
+      started: '#66f',
+      finished: '#6917ED',
+      delivered: 'white',
+      accepted: 'grey',
+    }
+
     function getData(url, success, done, $container) {
         $.ajax({
             url: url,
@@ -55,9 +64,38 @@ Pivotal.HomeModel = function(_config) {
         }
         getData(url, function(response) {
             $('.project-epics', $projectControl).html('');
+
+            // TODO: Mangle epics data for dougnut
+
             response.data.forEach(function(epic) {
-                $('.project-epics', $projectControl).append(Pivotal.Templates.renderTemplate('epic-info', epic));
-            })
+                var $node = $(Pivotal.Templates.renderTemplate('epic-info', epic))
+                  .appendTo($('.project-epics', $projectControl));
+
+                $node = $node.find('canvas');
+
+                var data = {
+                  labels: epic.progress_by_states.map(function(item) { return item.name }),
+                  datasets: [{
+                      data: epic.progress_by_states.map(function(item) { return item.value }),
+                      backgroundColor: epic.progress_by_states.map(function(item) { return colorMapping[item.name] || '#000' })
+                  }]
+                };
+
+                var options = {
+                  animation: { animateRotate: true },
+                  cutoutPercentage: 60,
+                  legend: { display: false },
+                  tooltips: { enabled: true }
+                };
+
+              var ctx = $node[0];
+              var chart = new Chart(ctx, {
+                  type: 'doughnut',
+                  data: data,
+                  fillOpacity: .5,
+                  options: options
+              });
+            });
         }, function() {
         }, $projectControl)
     };
