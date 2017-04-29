@@ -7,7 +7,6 @@ from flask import Response, request, current_app
 from flask.views import MethodView
 
 import settings
-from dateutil.parser import parse
 
 
 class BaseApiView(MethodView):
@@ -170,7 +169,8 @@ class EpicsApiView(BaseApiView):
 
             for epic in project_epics:
                 url = settings.PIVOTAL_TRACKER_STORIES_ENDPOINT.format(project_id=project_id)
-                filters = 'label:"{}" current_state:{}'.format(epic['name'], ','.join(self.EPIC_STORIES))
+                epic_name = epic.get('label', {}).get('name') or epic['name']
+                filters = 'label:"{}" current_state:{}'.format(epic_name, ','.join(self.EPIC_STORIES))
                 epic_stories = self.make_json_request(url, query_string_data={'filter': filters}, headers=self.HEADERS)
 
                 print('>> Found {} stories for epic {}, project {}'.format(
