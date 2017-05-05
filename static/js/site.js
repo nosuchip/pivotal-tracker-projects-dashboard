@@ -19,12 +19,12 @@ Pivotal.HomeModel = function(_config) {
     var config = $.extend({}, defaultConfig, _config);
 
     var colorMapping = {
-      unstarted: 'yellowgreen',
-      rejected: '#FA2E48',
-      started: '#66f',
-      finished: '#6917ED',
-      delivered: 'white',
-      accepted: 'grey',
+      // unstarted: 'yellowgreen',
+      // rejected: '#FA2E48',
+      // started: '#66f',
+      // finished: '#6917ED',
+      // accepted: 'grey',
+      delivered: 'grey',
     }
 
     function getData(url, success, done, $container) {
@@ -73,11 +73,30 @@ Pivotal.HomeModel = function(_config) {
 
                 $node = $node.find('canvas');
 
+                var deliveredValue = 0, otherValue = 0;
+
+                for(var i = 0, p; p = epic.progress_by_states[i]; i++) {
+                  if (p.name === 'delivered') {
+                    deliveredValue = p.value;
+                  } else {
+                    otherValue += p.value;
+                  }
+                }
+
+                var labels = ['delivered', 'other'],
+                  data = [deliveredValue, otherValue],
+                  backgroundColors = ['grey', 'white'];
+
                 var data = {
-                  labels: epic.progress_by_states.map(function(item) { return item.name }),
+                  // labels: epic.progress_by_states.map(function(item) { return item.name }),
+                  labels: labels,
                   datasets: [{
-                      data: epic.progress_by_states.map(function(item) { return item.value }),
-                      backgroundColor: epic.progress_by_states.map(function(item) { return colorMapping[item.name] || '#000' })
+                      // data: epic.progress_by_states.map(function(item) { return item.value }),
+                      // backgroundColor: epic.progress_by_states.map(function(item) { return colorMapping[item.name] || 'white' }),
+                      data: data,
+                      backgroundColor: backgroundColors,
+                      borderColor: 'grey',
+                      borderWidth: 1
                   }]
                 };
 
@@ -85,7 +104,8 @@ Pivotal.HomeModel = function(_config) {
                   animation: { animateRotate: true },
                   cutoutPercentage: 60,
                   legend: { display: false },
-                  tooltips: { enabled: true }
+                  tooltips: { enabled: true },
+                  hover: {mode: null}
                 };
 
               var ctx = $node[0];
