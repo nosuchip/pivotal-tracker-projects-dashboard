@@ -4,36 +4,10 @@
   <div class="error">{{ this }}</div>
 </script>
 
-
-<script type="text/x-handlebars-template" id="loader">
-  <div class="loader">
-    <div class="spinner {{cls}}">
-      <div class="bounce1"></div>
-      <div class="bounce2"></div>
-      <div class="bounce3"></div>
-    </div>
-    <span>{{text}}</span>
-  </div>
-</script>
-
-<script type="text/x-handlebars-template" id="project-container">
-  <div class="panel project-container" data-project-id="{{ project_id }}">
-    <div class="panel-heading">
-      <div class="project-name">{{ name }}</div>
-      <div class="show-finished">
-        <label><input type="checkbox" name="show_finished" value="yes"/> Show finished</label>
-      </div>
-    </div>
-    <div class="panel-body project-epics">
-      {{renderTemplate 'loader' '{"text": "Loading epics information..", "cls": "spinner-sm"}'}}
-    </div>
-  </div>
-</script>
-
 <script type="text/x-handlebars-template" id="epic-info">
   <div class="epic-container" data-epic-id="{{ epic_id }}">
-    <div class="epic-header"><span class="epic-name">{{ name }}</span></div>
-    {{ renderTemplate 'doughnut' this }}
+    <div class="epic-header"><span class="epic-name" data-epic-name="{{ urlencode name}}">{{ name }}</span></div>
+    <canvas style="width: 200px; height: 200px" class="chart-canvas"></canvas>
   </div>
 </script>
 
@@ -41,17 +15,6 @@
   <div class="stacked-bar-graph" style="width:100%">
 		<span style="width: 100%" class="stacked-bar-span stacked-bar-span-total" title="{{total_story_points}} story points in epic"></span>
   </div>
-
-  <div class="stacked-bar-graph" style="width:100%">
-    {{#each progress_by_states}}
-    	<span style="width: {{ normalized }}%" class="stacked-bar-span stacked-bar-span-{{name}}"
-        title="{{value}} story points in '{{name}}' stories, overall progress is {{ ../progress.value}}"></span>
-    {{/each}}
-  </div>
-</script>
-
-<script type="text/x-handlebars-template" id="doughnut">
-  <canvas style="width: 300px; height: 300px" class="chart-canvas"></canvas>
 </script>
 
 {%- endraw -%}

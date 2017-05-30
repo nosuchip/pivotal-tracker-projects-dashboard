@@ -1,16 +1,44 @@
 /* CSS loader */
 
 .loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   text-align: center;
+}
+
+.loader .backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  opacity: 0.3;
+  z-index: 9998;
+}
+
+.loader .message {
+    position: relative;
+    margin-top: 10px;
+    font-weight: bold;
+    z-index: 9999;
+    color: black;
 }
 
 .loader .spinner {
+  position: relative;
+  z-index: 9999;
+  opacity: 1;
   margin: 0 auto;
   width: 70px;
   text-align: center;
+  margin-top: 45%;
 }
 
-.loader .spinner > div {
+.loader .spinner>div {
   width: 18px;
   height: 18px;
   background-color: #333;
@@ -32,63 +60,64 @@
 }
 
 @-webkit-keyframes sk-bouncedelay {
-  0%, 80%, 100% { -webkit-transform: scale(0) }
-  40% { -webkit-transform: scale(1.0) }
-}
-
-@keyframes sk-bouncedelay {
-  0%, 80%, 100% {
-    -webkit-transform: scale(0);
-    transform: scale(0);
-  } 40% {
-    -webkit-transform: scale(1.0);
-    transform: scale(1.0);
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0)
+  }
+  40% {
+    -webkit-transform: scale(1.0)
   }
 }
 
-.loader .spinner-sm > div {
-  width: 10px;
-  height: 10px;
-}
-
-.loader .spinner-xs > div {
-  width: 5px;
-  height: 5px;
+@keyframes sk-bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
 }
 
 
 /* Panel (Bootstrap-like) */
 
 .panel-default {
-    border-color: #ddd;
+  border-color: #ddd;
 }
 
 .panel {
-    margin-bottom: 20px;
-    background-color: #fff;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
-    box-shadow: 0 1px 1px rgba(0,0,0,.05);
-    border-color: #ddd;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  border-color: #ddd;
 }
 
 .panel .panel-heading {
-    color: #333;
-    background-color: #f5f5f5;
-    padding: 4px 15px;
-    border-bottom: 1px solid transparent;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-color: #ddd;
-    position: relative;
+  color: #333;
+  background-color: #f5f5f5;
+  padding: 4px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-color: #ddd;
+  position: relative;
 }
 
 .panel .panel-body {
-    padding: 15px;
+  padding: 15px;
 }
 
+
 /* SITE css */
+
 html,
 body {
   height: 100%;
@@ -109,7 +138,7 @@ input {
   width: 13px;
   height: 13px;
   padding: 0;
-  margin:0;
+  margin: 0;
   vertical-align: middle;
   position: relative;
   top: -1px;
@@ -122,25 +151,9 @@ input {
   padding: 20px;
 }
 
-.projects-container > div.loader {
-  position: relative;
-  top: 45%;
-}
-
-.project-container .project-name {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-.project-container .show-finished {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-}
-
 .epic-container {
-  border-bottom: 1px solid #ddd;
-  padding: 15px 0;
+  /*border-bottom: 1px solid #ddd;*/
+  /*padding: 15px 0;*/
 }
 
 .epic-container:last-child {
@@ -154,73 +167,6 @@ input {
 
 .epic-container .epic-header {
   margin-bottom: 10px;
-}
-
-.stacked-bar-graph {
-  width: 100%;
-  height: 15px;
-  margin-bottom: 5px;
-  font-size: 0;
-}
-
-.stacked-bar-graph > span {
-  display: inline-block;
-  height: 15px;
-  border: none;
-  background-color: #80F31F;
-}
-
-.stacked-bar-span {
-  opacity: 0.5;
-}
-
-span.stacked-bar-span-total {
-  background-color: green;
-  opacity: 1;
-}
-
-span.stacked-bar-span-unstarted {
-  background-color: yellowgreen;
-}
-
-span.stacked-bar-span-rejected {
-  background-color: #FA2E48;
-}
-
-span.stacked-bar-span-started {
-  background-color: #66f;
-}
-
-span.stacked-bar-span-finished {
-  background-color: #6917ED;
-  opacity: 1;
-}
-
-span.stacked-bar-span-delivered {
-  background-color: white;
-  opacity: 1;
-}
-
-span.stacked-bar-span-accepted {
-  background-color: grey;
-  opacity: 1;
-}
-
-.projects-legend .legend-item {
-  display: inline-block;
-  margin-right: 15px;
-}
-
-.projects-legend .legend-item .legend-colour-mark {
-  width: 20px;
-  height: 10px;
-  display: inline-block;
-  border: 1px solid black;
-}
-
-.projects-legend .legend-item .legend-text {
-  display: inline-block;
-  font-size: 12px;
 }
 
 @media (min-width: 550px) {
@@ -246,3 +192,4 @@ span.stacked-bar-span-accepted {
     width: 300px;
   }
 }
+
