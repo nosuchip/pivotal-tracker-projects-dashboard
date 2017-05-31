@@ -37,17 +37,17 @@ Pivotal.HomeModel = function (_config) {
 
   var config = $.extend({}, defaultConfig, _config);
 
-  var colorMapping = {
-    accepted: 'green',
-    unscheduled: 'blue',
-    default: 'yellow',   // delivered, finished, started, rejected
-    other: 'gray'
-  };
-
   var backgroundColors = [
+    // accepted
     'rgba(0, 128, 0, 1)',
+
+    // unscheduled
     'rgba(0, 0, 255, 0.5)',
+
+    // default (delivered, finished, started, rejected)
     'rgba(255, 255, 0, 0.3)',
+
+    // other
     'rgba(128, 128, 128, 0.1)'
 ];
 
@@ -133,7 +133,7 @@ Pivotal.HomeModel = function (_config) {
         }
 
         var chartData = {
-          labels: ['accepted', 'unscheduled', 'delivered, finished, started or rejected', 'other'],
+          labels: ['accepted', 'unscheduled', 'ready', 'other'],
           datasets: [{
             data: [accepted, unscheduled, deliveredAndCo, other],
             backgroundColor: backgroundColors,
@@ -148,9 +148,6 @@ Pivotal.HomeModel = function (_config) {
           legend: { display: false },
           tooltips: {
             enabled: true,
-            tooltips: {
-              tooltipCaretSize: 0
-            }
           },
           hover: { mode: null }
         };
@@ -202,8 +199,6 @@ Pivotal.HomeModel = function (_config) {
   };
 
   self.init = function () {
-    $('body').on('click', '[name="show_finished"]', self.refreshProject);
-
     self.refresh();
   };
 
