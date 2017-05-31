@@ -122,7 +122,7 @@ Pivotal.HomeModel = function (_config) {
         }
 
         var chartData = {
-          labels: ['accepted', 'unscheduled', 'started', 'other'],
+          labels: ['accepted', 'iceboxed', 'started', 'unstarted'],
           datasets: [{
             data: [accepted, unscheduled, deliveredAndCo, other],
             backgroundColor: backgroundColors,

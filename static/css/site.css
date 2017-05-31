@@ -188,4 +188,12 @@ input {
     width: 300px;
   }
 }
-
+/* basic positioning */
+.legend { list-style: none; }
+.legend li { float: left; margin-right: 10px; }
+.legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
+/* your colors */
+.legend .accepted { background-color: #7ca43a; }
+.legend .started { background-color: #f8f5a3; }
+.legend .unstarted { background-color: #999999; }
+.legend .iceboxed { background-color: #90aecb; }
