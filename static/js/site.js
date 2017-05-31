@@ -52,7 +52,6 @@ Pivotal.HomeModel = function (_config) {
 ];
 
   var existingEpics = [];
-  var epicsProj = {};
 
   function getData(url, success, done, $container) {
     $.ajax({
@@ -89,16 +88,6 @@ Pivotal.HomeModel = function (_config) {
     var url = config.epicsUrl.replace('PROJECT_ID', project.project_id);
     getData(url, function (response) {
       response.data.forEach(function (epic) {
-        if (!(epic.name in epicsProj)) {
-          epicsProj[epic.name] = [project.name];
-        } else {
-          epicsProj[epic.name].push(project.name);
-
-          var element = $('.epic-name[data-epic-name="' + encodeURIComponent(epic.name) + '"]');
-          var text = epic.name + ' (' + epicsProj[epic.name].join(', ') + ')';
-          element.text(text);
-        }
-
         if (existingEpics.indexOf(epic.name) !== -1) {
           return;
         }
