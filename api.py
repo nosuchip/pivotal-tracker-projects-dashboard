@@ -135,6 +135,14 @@ class EpicsApiView(BaseApiView):
 
                     print('Epic data for epic {}, project {}: {}'.format(epic['name'], project_id, epic_data))
 
-                    project_data.append(epic_data)
+                    unaccepted_stories = [
+                        story for story in epic_data['progress_by_states']
+                        if story['name'] != 'accepted' and story['value'] > 0
+                    ]
+
+                    print('>> Unaccepted epic stories:', unaccepted_stories)
+
+                    if any(unaccepted_stories):
+                        project_data.append(epic_data)
 
         return self.response_ok(data=project_data)
