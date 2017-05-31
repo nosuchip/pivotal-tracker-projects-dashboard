@@ -1,0 +1,54 @@
+Basically I want to know how "done" we are on an epic. Done stories
+are "Accepted" - everything else is not done.
+
+So for Test 1 - there are 7 points done out of 25 points and for Test
+2 there are 7 out of 23.
+
+Finally I would like 4 or 5 project status donuts to show up nicely on
+a 1900 x 1200 monitor. (
+What I meant by the last point was that 4-5 projects, and all their
+donuts, should show up nicely. That could be as many as 20 donuts I'd
+think. We might re-think putting each project in its own box and just
+putting donuts next to one another.
+)
+
+=============================
+
+So the 'shopping' doughnut for 'Test 2' should I *think* these map:
+
+- 7 points that are green (current_state = accepted)
+- 4 points that are yellow (current_state = delivered, finished,
+started, rejected)
+- 1 point that is blue (current_state = unscheduled)
+- 11 points that are gray (everything left over)
+
+No need to calculate completion dates.
+Try and think about how to show as many of projects / epics in one
+view.
+
+This project will be popular in, and outside of my company. Many will
+use it as an open source thing.
+
+
+'accepted':     'Shopper should see list of products, with primary photo as thumbnail'
+'accepted':     'Product browsing should be paginated, with 10 products per page'
+'accepted':     'Make product browsing pagination AJAXy'
+'accepted':     'Shopper should be able to click on a product, and see all product details, including photos'
+'accepted':     'Shopper should be able to add product to shopping cart'
+
+'delivered':    'Shopper should be able to view contents of shopping cart'
+'rejected':     'Shopper should be able to remove product from shopping cart'
+'finished':     'Cart manipulation should be AJAXy'
+'started':      'Some product photos not scaled properly when browsing products'
+
+'unstarted':    'Test'
+'unstarted':    'Shopper should beable to recommend a product to a friend'
+'unstarted':    'Shopper should be able to search for product'
+'unstarted':    'Shopper should be able to enter credit card information and shipping address'
+'unstarted':    'Integrate with payment gateway'
+'unstarted':    'When shopper submits order, authorize total product amount from payment gateway'
+'unstarted':    'If system fails to authorize payment amount, display error message to shopper'
+'unstarted':    'If authorization is successful, show order number and confirmation message to shopper'
+'unstarted':    'Send notification email of order placement to admin'
+
+'unscheduled':  'Integrate with automated order fullfillment system'
