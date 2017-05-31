@@ -156,7 +156,7 @@ input {
   margin-bottom: 20px;
 }
 
-.epic-container .epic-header .epic-name {
+.epic-name {
   font-weight: bold;
   text-transform: capitalize;
 }

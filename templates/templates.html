@@ -5,9 +5,10 @@
 </script>
 
 <script type="text/x-handlebars-template" id="epic-info">
-  <div class="epic-container" data-epic-id="{{ epic_id }}">
-    <div class="epic-header"><span class="epic-name" data-epic-name="{{ urlencode name}}">{{ name }}</span></div>
+  <div class="epic-container" data-epic-id="{{ epic_id }}" style="text-align:center">
     <canvas style="width: 200px; height: 200px" class="chart-canvas"></canvas>
+    <br clear="left">
+    <span class="epic-name" data-epic-name="{{ urlencode name}}">{{ name }}</span>
   </div>
 </script>
 
