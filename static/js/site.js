@@ -95,10 +95,7 @@ Pivotal.HomeModel = function (_config) {
         existingEpics.push(epic.name);
 
         var $node = $(Pivotal.Templates.renderTemplate('epic-info', epic)).appendTo($('.epics-container'));
-
-        $node = $node.find('canvas');
-
-        var deliveredValue = 0, otherValue = 0;
+        var $canvas = $node.find('canvas');
 
         var accepted=0, unscheduled=0, deliveredAndCo=0, other=0;
 
@@ -134,20 +131,40 @@ Pivotal.HomeModel = function (_config) {
         var options = {
           animation: { animateRotate: true },
           cutoutPercentage: 60,
-          legend: { display: false },
+          legend: {
+            display: false
+          },
+          legendCallback: function(chart) {
+            console.log(chart.data);
+            var text = [];
+            text.push('<div class="chart-legend">');
+            text.push('<div class="chart-legend-inner">');
+            for (var i=0; i<chart.data.datasets[0].data.length; i++) {
+              text.push('<span class="legend-item">');
+              text.push('<span class="legend-color" style="background-color:' +
+                chart.data.datasets[0].backgroundColor[i] + '"></span>')
+              text.push('<span class="legend-text">' + chart.data.datasets[0].data[i] + '</span>');
+              text.push('</span>');
+            }
+            text.push('</div>');
+            text.push('</div>');
+            return text.join("");
+          },
           tooltips: {
             enabled: true,
           },
           hover: { mode: null }
         };
 
-        var ctx = $node[0];
+        var ctx = $canvas[0];
         var chart = new Chart(ctx, {
           type: 'doughnut',
           data: chartData,
           fillOpacity: 0.5,
           options: options
         });
+
+        $canvas.after(chart.generateLegend());
       });
       loading(0, message);
     }, function () {

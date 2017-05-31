@@ -156,7 +156,7 @@ input {
   margin-bottom: 20px;
 }
 
-.epic-name {
+.epic-container .epic-header .epic-name {
   font-weight: bold;
   text-transform: capitalize;
 }
@@ -188,12 +188,38 @@ input {
     width: 300px;
   }
 }
-/* basic positioning */
+
+
 .legend { list-style: none; }
 .legend li { float: left; margin-right: 10px; }
 .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
+
 /* your colors */
 .legend .accepted { background-color: #7ca43a; }
 .legend .started { background-color: #f8f5a3; }
 .legend .unstarted { background-color: #999999; }
 .legend .iceboxed { background-color: #90aecb; }
+
+.chart-legend {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.chart-legend .legend-item {
+  margin-right: 10px;
+  line-height: 20px;
+}
+
+.chart-legend .legend-item .legend-color,
+.chart-legend .legend-item .legend-text {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
+
+.chart-legend .legend-item .legend-color {
+  border: 1px solid black;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
