@@ -39,16 +39,16 @@ Pivotal.HomeModel = function (_config) {
 
   var backgroundColors = [
     // accepted
-    'rgba(0, 128, 0, 1)',
+    'rgba(124, 164, 58, 1)',
 
     // unscheduled
-    'rgba(0, 0, 255, 0.5)',
+    'rgba(144, 174, 203, 1)',
 
-    // default (delivered, finished, started, rejected)
-    'rgba(255, 255, 0, 0.3)',
+    // ready (delivered, finished, started, rejected)
+    'rgba(248, 245, 163, 1)',
 
     // other
-    'rgba(128, 128, 128, 0.1)'
+    'rgba(153, 153, 153, 1)'
 ];
 
   var existingEpics = [];
